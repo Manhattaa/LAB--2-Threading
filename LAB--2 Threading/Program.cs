@@ -98,7 +98,7 @@
         }
     }
 
-    public static class Extensionsfdga
+    public static class Extensions
     {
         public static T FindMax<T, TKey>(this IEnumerable<T> source, Func<T, TKey> selector)
             where TKey : IComparable<TKey>
