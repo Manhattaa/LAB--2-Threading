@@ -23,7 +23,7 @@
         {
             while (Running && Distance < 10)
             {
-                Thread.Sleep(1000);  // Simulating time passing
+                Thread.Sleep(100);  // Simulating time passing
                 Distance += Speed / 3600.0;  // Converting speed to km/s
 
                 if (new Random().NextDouble() < 1.0 / 30)
@@ -71,8 +71,12 @@
         {
             var car1 = new Car("Bil 1");
             var car2 = new Car("Bil 2");
+            var car3 = new Car("Bil 3");
+            var car4 = new Car("Bil 4");
+            var car5 = new Car("Bil 5");
 
-            var cars = new List<Car> { car1, car2 };
+
+            var cars = new List<Car> { car1, car2, car3, car4, car5 };
 
             var threads = new List<Thread>();
             foreach (var car in cars)
@@ -89,7 +93,7 @@
 
             while (cars.Exists(car => car.Running))
             {
-                Thread.Sleep(5000);  // Check race status every 5 seconds
+                Thread.Sleep(1000);  // Check race status every 1 second
                 PrintRaceStatus(cars);
             }
 
