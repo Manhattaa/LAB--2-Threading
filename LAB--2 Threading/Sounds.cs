@@ -11,26 +11,29 @@ namespace LAB__2_Threading
     {
         private static WaveOutEvent waveOut = new WaveOutEvent();
 
-        public static void PlaySound(string soundFileName)
+        public static async Task PlaySoundAsync(string soundFileName)
         {
-            string soundFilePath = Path.Combine("Sounds", soundFileName);
-
-            try
+            await Task.Run(() =>
             {
-                using (var audioFile = new AudioFileReader(soundFilePath))
+                string soundFilePath = Path.Combine("Sounds", soundFileName);
+
+                try
                 {
-                    waveOut.Init(audioFile);
-                    waveOut.Play();
-                    while (waveOut.PlaybackState == PlaybackState.Playing)
+                    using (var audioFile = new AudioFileReader(soundFilePath))
                     {
-                        Thread.Sleep(100);
+                        waveOut.Init(audioFile);
+                        waveOut.Play();
+                        while (waveOut.PlaybackState == PlaybackState.Playing)
+                        {
+                            Thread.Sleep(100);
+                        }
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error playing sound: {ex.Message}");
-            }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error playing sound: {ex.Message}");
+                }
+            });
         }
     }
 }

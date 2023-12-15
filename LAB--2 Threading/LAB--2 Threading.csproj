@@ -9,11 +9,25 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Sound\**" />
+    <EmbeddedResource Remove="Sound\**" />
+    <None Remove="Sound\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="NAudio" Version="2.2.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Sound\" />
+    <None Update="Sounds\cykla.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sounds\rip.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sounds\tokyo.wav">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

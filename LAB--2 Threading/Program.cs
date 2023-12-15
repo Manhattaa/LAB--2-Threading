@@ -45,7 +45,7 @@
                 ("Turbo-boost", 1.0 / 50, 15000),
                 ("Plötslig regnstorm", 3.0 / 50, 20000),
                 ("Motorfel", 10.0 / 50, 20000),
-                ("Kollision", 1.0 / 500, -1),
+                ("Kollision", 1.0 / 500, 50000)
             };
 
                 var random = new Random();
@@ -60,17 +60,31 @@
 
 
 
-        class Program
+    class Program
+    {
+        static async Task PlayBackgroundMusicAsync()
         {
-        static void PlayBackgroundMusic()
-        {
-            // Specify the filename of your background music
             string backgroundMusicFileName = "tokyo.wav";
-
-            // Play the background music
-            Sounds.PlaySound(backgroundMusicFileName);
+            await Sounds.PlaySoundAsync(backgroundMusicFileName);
         }
-        static void PrintRaceStatus(List<Car> cars)
+
+        static async Task Main()
+        {
+            var car1 = new Car("Bil 1");
+            var car2 = new Car("Bil 2");
+            var car3 = new Car("Bil 3");
+            var car4 = new Car("Bil 4");
+            var car5 = new Car("Bil 5");
+
+            var cars = new List<Car> { car1, car2, car3, car4, car5 };
+
+            var threads = new List<Thread>();
+            foreach (var car in cars)
+            {
+                var thread = new Thread(car.SimulateRace);
+                threads.Add(thread);
+            }
+            static void PrintRaceStatus(List<Car> cars)
             {
                 Console.WriteLine("\nTävlingsstatus:");
                 foreach (var car in cars)
@@ -80,45 +94,29 @@
                 Console.WriteLine();
             }
 
-            static void Main()
+            // Start playing the background music asynchronously, so we can play music without affecting the program negatively
+            PlayBackgroundMusicAsync();
+
+            foreach (var thread in threads)
             {
-                var car1 = new Car("Bil 1");
-                var car2 = new Car("Bil 2");
-                var car3 = new Car("Bil 3");
-                var car4 = new Car("Bil 4");
-                var car5 = new Car("Bil 5");
-
-                var cars = new List<Car> { car1, car2, car3, car4, car5 };
-
-                var threads = new List<Thread>();
-                foreach (var car in cars)
-                {
-                    var thread = new Thread(car.SimulateRace);
-                    threads.Add(thread);
-                }
-
-                Console.WriteLine("Tävlingen har börjat!");
-                foreach (var thread in threads)
-                {
-                    thread.Start();
-                }
-            PlayBackgroundMusic();
+                thread.Start();
+            }
 
             while (cars.Exists(car => car.Running))
-                {
-                    Thread.Sleep(1000);  // Check race status every 1 second
-                    PrintRaceStatus(cars);
-                }
-
-                var winner = cars.FindMax(car => car.Distance);
-                Console.WriteLine($"\n{winner.Name} vann tävlingen!");
-
-                // Ensure all threads are finished before exiting
-                foreach (var thread in threads)
-                {
-                    thread.Join();
-                }
+            {
+                Thread.Sleep(1000);
+                PrintRaceStatus(cars);
             }
+
+            var winner = cars.FindMax(car => car.Distance);
+            Console.WriteLine($"\n{winner.Name} vann tävlingen!");
+
+            foreach (var thread in threads)
+            {
+                thread.Join();
+            }
+        }
+    }
         }
 
         public static class Extensions
@@ -152,4 +150,3 @@
                 }
             }
         }
-    }
