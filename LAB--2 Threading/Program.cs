@@ -31,12 +31,13 @@ class Car
 
             if (new Random().NextDouble() < 1.0 / 30)
             {
+                Task.Run(() => PlayEventSound("EventName")); // Start playing event sound in the background
                 HandleEvent();
             }
         }
     }
 
-     private void HandleEvent()
+    private void HandleEvent()
     {
         var events = new List<(string, double, int)>
         {
@@ -79,7 +80,7 @@ class Program
 {
     private static Timer clearConsoleTimer;
 
-    static async Task PlayBackgroundMusicAsync()
+    private static async Task PlayBackgroundMusicAsync()
     {
         string backgroundMusicFileName = "tokyo.wav";
         await Sounds.PlaySoundAsync(backgroundMusicFileName);
@@ -133,7 +134,7 @@ class Program
         }
 
         // Start playing the background music asynchronously
-        PlayBackgroundMusicAsync();
+        Task.Run(() => PlayBackgroundMusicAsync());
 
         // Start a thread to display events
         var displayEventsThread = new Thread(DisplayEvents);
