@@ -19,10 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Sounds\cykla.wav">
+    <None Update="Sounds\Punktering.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Sounds\rip.wav">
+    <None Update="Sounds\Krash.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Sounds\tokyo.wav">

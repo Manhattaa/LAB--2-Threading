@@ -35,5 +35,10 @@ namespace LAB__2_Threading
                 }
             });
         }
+
+        internal static object PlaySound(string soundFileName)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
