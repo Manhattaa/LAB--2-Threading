@@ -1,6 +1,6 @@
-﻿using LAB__2_Threading;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -28,51 +28,14 @@ class Car
         {
             Thread.Sleep(100);  // Simulating time passing
             Distance += Speed / 3600.0;  // Converting speed to km/s
-
-            if (new Random().NextDouble() < 1.0 / 30)
-            {
-                Task.Run(() => PlayEventSound("EventName")); // Start playing event sound in the background
-                HandleEvent();
-            }
-        }
-    }
-
-    private void HandleEvent()
-    {
-        var events = new List<(string, double, int)>
-        {
-            ("Slut på bensin", 1.0 / 1200, 30000),
-            ("Punktering", 2.0 / 700, 20000),
-            ("Fågel på vindrutan", 5.0 / 5000, 10000),
-            ("Krash", 1.0 / 50000, -1),
-            ("Turbo-boost", 1.0 / 3500, 15000),
-            ("Plötslig regnstorm", 3.0 / 1800, 20000),
-            ("Motorfel", 10.0 / 10000, 20000),
-        };
-
-        var random = new Random();
-        var eventIndex = random.Next(events.Count);
-        var (eventName, _, duration) = events[eventIndex];
-
-        Console.WriteLine($"{Name} har fått ett problem: {eventName}");
-
-        PlayEventSound(eventName);  // Play sound for the event
-
-        // Add the event to the event log
-        lock (eventLogLock)
-        {
-            eventLog.Add($"{Name}: {eventName} ({duration / 1000} s)");
         }
 
-        Thread.Sleep(duration);
-        Console.WriteLine($"{Name} fortsätter tävla!");
-    }
-
-    private async void PlayEventSound(string eventName)
-    {
-        // Assume you have sound files named "eventName.wav" for each event
-        string soundFileName = $"{eventName}.wav";
-        await Sounds.PlaySoundAsync(soundFileName);
+        // Check if the car crossed the finish line
+        if (Distance >= 2 && Running)
+        {
+            Running = false;
+            Console.WriteLine($"{Name} crossed the finish line!");
+        }
     }
 }
 
@@ -80,17 +43,11 @@ class Program
 {
     private static Timer clearConsoleTimer;
 
-    private static async Task PlayBackgroundMusicAsync()
-    {
-        string backgroundMusicFileName = "tokyo.wav";
-        await Sounds.PlaySoundAsync(backgroundMusicFileName);
-    }
-
     static void DisplayEvents()
     {
         while (true)
         {
-            Thread.Sleep(200);  // Adjusted delay for more responsive output
+            Thread.Sleep(200); 
 
             lock (Car.eventLogLock)
             {
@@ -116,10 +73,18 @@ class Program
             Console.WriteLine($"{car.Name,-10}: {car.Distance:F2} km, Hastighet: {car.Speed} km/h");
         }
 
-        Console.WriteLine();
+        // Check if any car has crossed the finish line
+        if (cars.Any(car => car.Distance >= 2))
+        {
+            Console.WriteLine("\nRace completed!");
+        }
+        else
+        {
+            Console.WriteLine();
+        }
     }
 
-    static async Task Main()
+    static void Main()
     {
         var car1 = new Car("Bil 1");
         var car2 = new Car("Bil 2");
@@ -133,9 +98,6 @@ class Program
             threads.Add(thread);
         }
 
-        // Start playing the background music asynchronously
-        Task.Run(() => PlayBackgroundMusicAsync());
-
         // Start a thread to display events
         var displayEventsThread = new Thread(DisplayEvents);
         displayEventsThread.Start();
@@ -148,18 +110,27 @@ class Program
             thread.Start();
         }
 
-        while (cars.Exists(car => car.Running))
+        // Wait for any car to finish the race
+        while (cars.Any(car => car.Running))
         {
             Thread.Sleep(1000);
             PrintRaceStatus(cars);
         }
 
-        var winner = cars.FindMax(car => car.Distance);
-        Console.WriteLine($"\n{winner.Name} vann tävlingen!");
-
         // Stop the display events thread
         displayEventsThread.Join();
 
+        // Find the winner
+        var winner = cars.FindMax(car => car.Distance);
+        Console.WriteLine($"\n{winner.Name} vann tävlingen!");
+
+        // Clear the console
+        Console.Clear();
+
+        // Print the scoreboard in order
+        PrintScoreboard(cars);
+
+        // Wait for all cars to finish their threads
         foreach (var thread in threads)
         {
             thread.Join();
@@ -167,6 +138,20 @@ class Program
 
         // Dispose the timer when done
         clearConsoleTimer.Dispose();
+    }
+
+    static void PrintScoreboard(List<Car> cars)
+    {
+        Console.WriteLine("Resultat:");
+
+        var sortedCars = cars.OrderByDescending(car => car.Distance);
+
+        foreach (var car in sortedCars)
+        {
+            Console.WriteLine($"{car.Name,-10}: {car.Distance:F2} km, Hastighet: {car.Speed} km/h");
+        }
+
+        Console.WriteLine();
     }
 
     static void ClearConsoleCallback(object state)
