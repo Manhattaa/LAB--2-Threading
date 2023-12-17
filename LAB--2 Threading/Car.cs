@@ -64,20 +64,21 @@ namespace LAB__2_Threading
                 if (!Running)
                     return;
 
-                // Check if enough time has passed since the last event (12 seconds)
-                if ((DateTime.Now - LastEventTime).TotalSeconds < 20)
+                // Check if enough time has passed since the last event (5 seconds)
+                if ((DateTime.Now - LastEventTime).TotalSeconds < 12)
                     return;
 
                 lock (randomEventLock)
                 {
                     // Generate a random event for a random car
-                    int eventType = RandomInstance.Next(4); // Use the car's specific Random instance
+                    int eventType = RandomInstance.Next(6); // Use the car's specific Random instance
 
                     double distanceChange = 0; // Variable to store the distance change
 
                     switch (eventType)
                     {
-                        case 0: // you're outta soup - 1/50
+                        case 0: // you're outta soup - 20%
+                        if (RandomInstance.Next(100) < 20)
                             lock (eventLogLock)
                             {
                                 distanceChange = -15.0; // Simulate stopping for 15 seconds
@@ -86,7 +87,8 @@ namespace LAB__2_Threading
                             Thread.Sleep(15000); // 15 seconds delay
                             break;
 
-                        case 1: // Tire puncture - 2/50
+                        case 1: // Tire puncture - 12%
+                        if (RandomInstance.Next(100) < 12)
                             lock (eventLogLock)
                             {
                                 distanceChange = -20.0; // Simulate stopping for 20 seconds
@@ -96,6 +98,7 @@ namespace LAB__2_Threading
                             break;
 
                         case 2: // Bird hits windshield - 5/50 probability
+                        if (RandomInstance.Next(100) < 30)
                             lock (eventLogLock)
                             {
                                 distanceChange = -5.0; // Simulate stopping for 5 seconds
@@ -105,15 +108,35 @@ namespace LAB__2_Threading
                             break;
 
                         case 3: // Engine Failure! - 10/50 probability
+                        if (RandomInstance.Next(100) < 20)
                             lock (eventLogLock)
                             {
                                 Speed -= 1; // Simulate engine failure by reducing speed
                                 eventLog.Add($"{Name} experienced engine failure (1 km/h slower)");
                             }
                             break;
-                    }
+                        case 4: //Oh no a crash! - 20%
+                        if (RandomInstance.Next(100) < 20)
+                            lock (eventLogLock)
+                            {
+                                Running = false;  //if a crash occurs, the car in question is out!
+                                Speed -= 120; //a crashed car isn't moving anymore. RIP.
+                                eventLog.Add($"{Name} has crashed! and is now out of the Race :(");
+                            }
+                            break;
+                        
+                        case 5: //A gust of wind! 15%
+                        if (RandomInstance.Next(100) < 15)
+                            lock (eventLogLock)
+                            {
+                                Speed += 10; //Simulate wind by adding speed
+                                distanceChange = 20.0;
+                                eventLog.Add($"{Name} feels the wind helping you (10km/h boost)");
+                            }
+                            break;
+                }
 
-                    // Update the distance only if it doesn't make the distance negative
+                    // Update the distance ONLY if its positive. (Trying to fix a bug)
                     if (Distance + distanceChange >= 0)
                     {
                         Distance += distanceChange;

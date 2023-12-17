@@ -63,7 +63,7 @@ namespace LAB__2_Threading
                 var car3 = new Car("Christoffer", random: random);
                 var car4 = new Car("Gamla Bettan", random: random);
                 var car5 = new Car("Lightning McQueen", random: random);
-                var car6 = new Car("Aldor", random: random);
+                var car6 = new Car("Aldor ", random: random);
 
                 car1.LastEventTime = DateTime.Now;
                 car2.LastEventTime = DateTime.Now;
@@ -110,7 +110,7 @@ namespace LAB__2_Threading
                 randomEventTimer.Change(Timeout.Infinite, Timeout.Infinite);
 
                 var winner = cars.FindMax(car => car.Distance);
-                Console.WriteLine($"\n{winner.Name} vann tävlingen!");
+                Console.WriteLine($"\n{winner.Name} is the Winner of this competition!");
 
                 foreach (var car in cars)
                 {
@@ -148,11 +148,21 @@ namespace LAB__2_Threading
             Console.WriteLine($"1st Place: {sortedCars[0].Name,-10}");
             Console.WriteLine($"2nd Place: {sortedCars[1].Name,-10}");
             Console.WriteLine($"3rd Place: {sortedCars[2].Name,-10}");
+            Console.WriteLine($"4th Place: {sortedCars[3].Name,-10}");
+            Console.WriteLine($"5th Place: {sortedCars[4].Name,-10}");
+            Console.WriteLine($"6th Place: {sortedCars[5].Name,-10}");
+
+
+            Console.Write("Honorable Mentions:");
+            Console.Write($"{sortedCars[3].Name,-10} :");
+            Console.Write($"{sortedCars[4].Name,-10} :");
+            Console.Write($"{sortedCars[5].Name,-10} :");
+
 
             Console.Clear();
             Console.WriteLine("\nRace completed!");
             Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n");
-            Console.WriteLine($"                           {sortedCars[0].Name,-10}\r\n                         @-----------------------@\r\n       {sortedCars[1].Name,-10}  |           @           |\r\n@-----------------------@|           |           |\r\n|           @           ||           |           | {sortedCars[2].Name,-10}\r\n|           |           ||           |           |@-----------------------@\r\n|           |           ||           |           ||           @           |");
+            Console.WriteLine($"                          {sortedCars[0].Name,-10}\r\n                         @-----------------------@\r\n       {sortedCars[1].Name,-10}  |           @           |\r\n@-----------------------@|           |           |\r\n|           @           ||           |           | {sortedCars[2].Name,-10}\r\n|           |           ||           |           |@-----------------------@\r\n|           |           ||           |           ||           @           |");
         }
 
         private static void ClearConsoleCallback(object state)
