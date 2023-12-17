@@ -57,7 +57,7 @@ namespace LAB__2_Threading
                 return;
 
             // Check if enough time has passed since the last event (12 seconds)
-            if ((DateTime.Now - LastEventTime).TotalSeconds < 12)
+            if ((DateTime.Now - LastEventTime).TotalSeconds < 3)
                 return;
 
             lock (randomEventLock)

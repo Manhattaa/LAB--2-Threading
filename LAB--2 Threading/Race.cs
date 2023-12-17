@@ -43,7 +43,7 @@ namespace LAB__2_Threading
 
                 foreach (var car in cars)
                 {
-                    Console.WriteLine($"{car.Name,-10}: {car.Distance:F2} km, Hastighet: {car.Speed} km/h");
+                    Console.WriteLine($"{car.Name,-10}: {car.Distance:F2} km, Speed: {car.Speed} km/h");
                 }
 
                 if (cars.Any(car => car.Distance >= 10))
