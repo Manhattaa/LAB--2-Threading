@@ -19,12 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Sounds\Punktering.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Sounds\Krash.wav">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="Sounds\tokyo.wav">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

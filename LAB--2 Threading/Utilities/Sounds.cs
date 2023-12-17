@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace LAB__2_Threading
+namespace LAB__2_Threading.Utilities
 {
     internal class Sounds
     {
@@ -23,7 +23,7 @@ namespace LAB__2_Threading
                         waveOut.Play();
                         while (waveOut.PlaybackState == PlaybackState.Playing)
                         {
-                            System.Threading.Thread.Sleep(100);
+                            Thread.Sleep(100);
                         }
                     }
                 }
