@@ -14,8 +14,9 @@ namespace LAB__2_Threading
             private static Sounds backgroundMusicPlayer;
             private static Random random = new Random();
             private static bool raceCompleted = false;
+            private static Timer randomEventTimer;
 
-            public static void DisplayEvents()
+        public static void DisplayEvents()
             {
                 while (!raceCompleted)
                 {
@@ -82,7 +83,7 @@ namespace LAB__2_Threading
 
                 clearConsoleTimer = new Timer(ClearConsoleCallback, null, 0, 60000);
 
-                var randomEventTimer = new Timer(GenerateRandomEventCallback, cars, 0, 20000);
+                var randomEventTimer = new Timer(GenerateRandomEventCallback, cars, 0, 12000);
 
                 foreach (var thread in threads)
                 {
@@ -125,7 +126,11 @@ namespace LAB__2_Threading
         private static void GenerateRandomEventCallback(object state)
         {
             var cars = (List<Car>)state;
+
+            // Choose a random car to generate an event
             var randomCar = cars[random.Next(cars.Count)];
+
+            // Generate a random event for the selected car
             randomCar.HandleRandomEvent();
         }
 
