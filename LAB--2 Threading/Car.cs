@@ -97,7 +97,7 @@ namespace LAB__2_Threading
                         lock (eventLogLock)
                         {
                             Speed -= 1; // Simulate engine failure by reducing speed
-                            eventLog.Add($"{Name} experienced engine failure. (1 km/h slower)");
+                            eventLog.Add($"{Name} experienced engine failure (1 km/h slower)");
                         }
                         break;
                 }
