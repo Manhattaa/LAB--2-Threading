@@ -36,8 +36,16 @@ namespace LAB__2_Threading
             while (Running && Distance < raceDistance)
             {
                 Thread.Sleep(100);
-                Distance += Speed / 3600.0;
-                HandleRandomEvent();
+
+                lock (randomEventLock)
+                {
+                    HandleRandomEvent();
+
+                    if (Running)
+                    {
+                        Distance += Speed / 3600.0;
+                    }
+                }
             }
 
             if (Distance >= raceDistance && Running)
@@ -50,67 +58,70 @@ namespace LAB__2_Threading
             }
         }
 
-        internal void HandleRandomEvent()
-        {
-            // Check if the race is still running
-            if (!Running)
-                return;
-
-            // Check if enough time has passed since the last event (12 seconds)
-            if ((DateTime.Now - LastEventTime).TotalSeconds < 3)
-                return;
-
-            lock (randomEventLock)
+            internal void HandleRandomEvent()
             {
-                // Generate a random event for a random car
-                int eventType = RandomInstance.Next(4); // Use the car's specific Random instance
+                // Check if the race is still running
+                if (!Running)
+                    return;
 
-                double distanceChange = 0; // Variable to store the distance change
+                // Check if enough time has passed since the last event (12 seconds)
+                if ((DateTime.Now - LastEventTime).TotalSeconds < 20)
+                    return;
 
-                switch (eventType)
+                lock (randomEventLock)
                 {
-                    case 0: // you're outta soup - 1/50
-                        lock (eventLogLock)
-                        {
-                            distanceChange = -15.0; // Simulate stopping for 15 seconds
-                            eventLog.Add($"{Name}: You run out of gas. (15 s)");
-                        }
-                        break;
+                    // Generate a random event for a random car
+                    int eventType = RandomInstance.Next(4); // Use the car's specific Random instance
 
-                    case 1: // Tire puncture - 2/50
-                        lock (eventLogLock)
-                        {
-                            distanceChange = -20.0; // Simulate stopping for 20 seconds
-                            eventLog.Add($"{Name}: The tires get punctured. (20 s)");
-                        }
-                        break;
+                    double distanceChange = 0; // Variable to store the distance change
 
-                    case 2: // Bird hits windshield - 5/50 probability
-                        lock (eventLogLock)
-                        {
-                            distanceChange = -5.0; // Simulate stopping for 5 seconds
-                            eventLog.Add($"{Name}: Bird hits the windshield (5 s)");
-                        }
-                        break;
+                    switch (eventType)
+                    {
+                        case 0: // you're outta soup - 1/50
+                            lock (eventLogLock)
+                            {
+                                distanceChange = -15.0; // Simulate stopping for 15 seconds
+                                eventLog.Add($"{Name}: You run out of gas. (15 s)");
+                            }
+                            Thread.Sleep(15000); // 15 seconds delay
+                            break;
 
-                    case 3: // Engine Failure! - 10/50 probability
-                        lock (eventLogLock)
-                        {
-                            Speed -= 1; // Simulate engine failure by reducing speed
-                            eventLog.Add($"{Name} experienced engine failure (1 km/h slower)");
-                        }
-                        break;
+                        case 1: // Tire puncture - 2/50
+                            lock (eventLogLock)
+                            {
+                                distanceChange = -20.0; // Simulate stopping for 20 seconds
+                                eventLog.Add($"{Name}: The tires get punctured. (20 s)");
+                            }
+                            Thread.Sleep(20000); // 20 seconds delay
+                            break;
+
+                        case 2: // Bird hits windshield - 5/50 probability
+                            lock (eventLogLock)
+                            {
+                                distanceChange = -5.0; // Simulate stopping for 5 seconds
+                                eventLog.Add($"{Name}: Bird hits the windshield (5 s)");
+                            }
+                            Thread.Sleep(5000); // 5 seconds delay
+                            break;
+
+                        case 3: // Engine Failure! - 10/50 probability
+                            lock (eventLogLock)
+                            {
+                                Speed -= 1; // Simulate engine failure by reducing speed
+                                eventLog.Add($"{Name} experienced engine failure (1 km/h slower)");
+                            }
+                            break;
+                    }
+
+                    // Update the distance only if it doesn't make the distance negative
+                    if (Distance + distanceChange >= 0)
+                    {
+                        Distance += distanceChange;
+                    }
+
+                    // Update the LastEventTime for the car
+                    LastEventTime = DateTime.Now;
                 }
-
-                // Update the distance only if it doesn't make the distance negative
-                if (Distance + distanceChange >= 0)
-                {
-                    Distance += distanceChange;
-                }
-
-                // Update the LastEventTime for the car
-                LastEventTime = DateTime.Now;
-            }
         }
     }
 }

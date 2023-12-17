@@ -58,15 +58,18 @@ namespace LAB__2_Threading
 
             public static async Task RunAsync()
             {
-                var car1 = new Car("Hotwheels toy car", random: random);
+                var car1 = new Car("Mystery Machine", random: random);
                 var car2 = new Car("Vroom Vroom", random: random);
-                var car3 = new Car("Mystery Machine", random: random);
+                var car3 = new Car("Christoffer", random: random);
+                var car4 = new Car("Gamla Bettan", random: random);
+                var car5 = new Car("Lightning McQueen", random: random);
+                var car6 = new Car("Aldor", random: random);
 
                 car1.LastEventTime = DateTime.Now;
                 car2.LastEventTime = DateTime.Now;
                 car3.LastEventTime = DateTime.Now;
 
-                var cars = new List<Car> { car1, car2, car3 };
+                var cars = new List<Car> { car1, car2, car3, car4, car5, car6 };
 
                 var threads = new List<Thread>();
                 foreach (var car in cars)
@@ -135,20 +138,24 @@ namespace LAB__2_Threading
         }
 
         public static void PrintPodium(List<Car> cars)
-            {
-                Console.Clear();
-                Console.WriteLine("Podium:");
+        {
+            Console.Clear();
+            Console.WriteLine("Podium:");
 
-                Console.WriteLine($"1st Place: {cars[0].Name,-10}");
-                Console.WriteLine($"2nd Place: {cars[1].Name,-10}");
-                Console.WriteLine($"3rd Place: {cars[2].Name,-10}");
+            // Sort the cars based on the distance covered in descending order
+            var sortedCars = cars.OrderByDescending(car => car.Distance).ToList();
 
-                Console.WriteLine("\nRace completed!");
-                Console.WriteLine("\n\n\n\n\n\n\n\n\n\n");
-                Console.WriteLine($"                           {cars[0].Name,-10}\r\n                         @-----------------------@\r\n       {cars[1].Name,-10}  |           @           |\r\n@-----------------------@|           |           |\r\n|           @           ||           |           | {cars[2].Name,-10}\r\n|           |           ||           |           |@-----------------------@\r\n|           |           ||           |           ||           @           |");
-            }
+            Console.WriteLine($"1st Place: {sortedCars[0].Name,-10}");
+            Console.WriteLine($"2nd Place: {sortedCars[1].Name,-10}");
+            Console.WriteLine($"3rd Place: {sortedCars[2].Name,-10}");
 
-            private static void ClearConsoleCallback(object state)
+            Console.Clear();
+            Console.WriteLine("\nRace completed!");
+            Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n");
+            Console.WriteLine($"                           {sortedCars[0].Name,-10}\r\n                         @-----------------------@\r\n       {sortedCars[1].Name,-10}  |           @           |\r\n@-----------------------@|           |           |\r\n|           @           ||           |           | {sortedCars[2].Name,-10}\r\n|           |           ||           |           |@-----------------------@\r\n|           |           ||           |           ||           @           |");
+        }
+
+        private static void ClearConsoleCallback(object state)
             {
                 if (!raceCompleted)
                 {
