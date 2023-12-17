@@ -162,7 +162,7 @@ namespace LAB__2_Threading
             Console.Clear();
             Console.WriteLine("\nRace completed!");
             Console.WriteLine("\n\n\n\n\n\n\n\n\n\n\n\n\n");
-            Console.WriteLine($"                          {sortedCars[0].Name,-10}\r\n                         @-----------------------@\r\n       {sortedCars[1].Name,-10}  |           @           |\r\n@-----------------------@|           |           |\r\n|           @           ||           |           | {sortedCars[2].Name,-10}\r\n|           |           ||           |           |@-----------------------@\r\n|           |           ||           |           ||           @           |");
+            Console.WriteLine($"                          {sortedCars[0].Name,-10}\r\n                         @-----------------------@\r\n       {sortedCars[1].Name,-10}        |           @           |\r\n@-----------------------@|           |           |\r\n|           @           ||           |           | {sortedCars[2].Name,-10}\r\n|           |           ||           |           |@-----------------------@\r\n|           |           ||           |           ||           @           |");
         }
 
         private static void ClearConsoleCallback(object state)
