@@ -59,7 +59,7 @@
         public static async Task RunAsync()
         {
             Console.WriteLine("Select mode:");
-            Console.WriteLine("1. Normal Mode");
+            Console.WriteLine("1. Tokyo Mode");
             Console.WriteLine("2. yeltsa kcir Mode");
 
             int modeChoice;
