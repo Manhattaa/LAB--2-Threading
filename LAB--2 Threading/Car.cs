@@ -71,7 +71,7 @@ namespace LAB__2_Threading
             lock (randomEventLock)
             {
                 // Generate a random event for a random car
-                int eventType = RandomInstance.Next(6); // Use the car's specific Random instance
+                int eventType = RandomInstance.Next(5); // Use the car's specific Random instance
 
                 double distanceChange = 0; // Variable to store the distance change
 
@@ -132,18 +132,6 @@ namespace LAB__2_Threading
                                 Running = false;  //if a crash occurs, the car in question is out!
                                 Speed -= 120; //a crashed car isn't moving anymore. RIP.
                                 eventLog.Add($"{Name} has crashed! and is now out of the Race :(");
-                            }
-                        }
-                        break;
-
-                    case 5: //A gust of wind! 0.5%
-                        if (RandomInstance.Next(100) < 0.5)
-                        {
-                            lock (eventLogLock)
-                            {
-                                Speed += 10; //Simulate wind by adding speed
-                                distanceChange = 20.0;
-                                eventLog.Add($"{Name} feels the wind helping you (10km/h boost)");
                             }
                         }
                         break;
