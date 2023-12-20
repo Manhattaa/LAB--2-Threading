@@ -60,7 +60,7 @@
         {
             Console.WriteLine("Select mode:");
             Console.WriteLine("1. Tokyo Mode");
-            Console.WriteLine("2. yeltsa kcir Mode");
+            Console.WriteLine("2. 12138127a84483e726b06ebf8397d64d Mode");
 
             int modeChoice;
             while (!int.TryParse(Console.ReadLine(), out modeChoice) || (modeChoice != 1 && modeChoice != 2))
